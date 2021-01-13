@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/datepicker.css" rel="stylesheet" />
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+    <script src="~/Scripts/axios.min.js"></script>
+    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/jquery-editable-select.css" rel="stylesheet" />
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-success">
+        <a href="#"> <img src="~/Image/Logo.png" /></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto text-white">
+                    <li>@Html.ActionLink("Products", "Index", "Products", null, new { @class = "nav-link text-white" })</li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Distributors", "Index", "Distributors", null, new { @class = "nav-link text-white" })</li>
+                        <li>@Html.ActionLink("Manufacturers", "Index", "Manufacturers", null, new { @class = "nav-link text-white" })</li>
+                        <li>@Html.ActionLink("Classes", "Index", "ProductClassifications", null, new { @class = "nav-link text-white" })</li>
+                        <li>@Html.ActionLink("Categories", "Index", "ProductCategories", null, new { @class = "nav-link text-white" })</li>
+                        <li>@Html.ActionLink("Regions", "Index", "Regions", null, new { @class = "nav-link text-white  text-white" })</li>
+                        <li>@Html.ActionLink("Users", "GetAllUsers", "Account", null, new { @class = "nav-link text-white  text-white" })</li>
+                    }
+
+                </ul>
+
+                <span class="navbar-text">
+                    @Html.Partial("_LoginPartial")
+                </span>
+            </div>}
+    </nav>
+    <div class="custome-container">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Powered by Groovetek</p>
+        </footer>
+    </div>
+    <scripts>
+
+    </scripts>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/src/Product.js"></script>
+    <script src="~/Scripts/src/jquery-editable-select.min.js"></script>
+</body>
+</html>

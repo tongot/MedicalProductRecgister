@@ -1,0 +1,76 @@
+﻿
+@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<Pharmacy.Models.Product>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class=" card p-1 mt-3">
+    <h3 class="text-center mt-3">Products</h3>
+    <p>
+        @Html.ActionLink("Report", "reportView", "Report", null, new { @class = "btn btn-danger float-right" })
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary float-right mr-1" })
+    </p>
+    <hr />
+    <div class="">
+        <form class="form-inline mb-2">
+            <input class="form-control mr-sm-2" name="search" type="text" placeholder="search value" aria-label="Search">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+        <div>
+            @foreach (var item in Model)
+            {
+                <div class="card mt-1">
+                    <div class="card-header">
+                        <h5>@Html.DisplayFor(modelItem => item.BrandName)</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <h6>Class</h6>
+                                @Html.DisplayFor(modelItem => item.ProductClassification.Name)
+                            </div>
+                            <div class="col-md-2">
+                                <h6>Region</h6>
+                                @Html.DisplayFor(modelItem => item.Region.Name)
+                            </div>
+                            <div class="col-md-2">
+                                <h6>Product Code</h6>
+                                @Html.DisplayFor(modelItem => item.ProductCode)
+                            </div>
+                            <div class="col-md-6">
+                                <h6> Restricted Ingredients</h6>
+                                @Html.DisplayFor(modelItem => item.RestrictedIngridients)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="float-left"><span><strong>Pack size:</strong></span>@Html.DisplayFor(modelItem => item.PackSize)</span>
+                        <span class="float-right">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ProductId }, new { @class = "btn btn-sm btn-primary" })
+                            @Html.ActionLink("Details", "Details", new { id = item.ProductId }, new { @class = "btn btn-sm btn-success" })
+                            @Html.ActionLink("Delete", "Delete", new { id = item.ProductId }, new { @class = "btn btn-sm btn-danger" })
+                        </span>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="text-center">
+            @Html.PagedListPager(Model, page => Url.Action("index", new
+       {
+           page,
+           search = Request.QueryString["search"],
+           //searchby = Request.QueryString["searchby"]
+
+       }
+            ))
+        </div>
+    </div>
+
+</div>
+
+

@@ -1,0 +1,77 @@
+﻿@model Pharmacy.Models.UserViewModel
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2></h2>
+
+@using (Html.BeginForm("Update", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="d-flex justify-content-center">
+        <div class="card col-md-4">
+            <h4>Update Account</h4>
+            <hr />
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email)
+                <div>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.NationalId)
+                <div>
+                    @Html.TextBoxFor(m => m.NationalId, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Name)
+                <div>
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Surname)
+                <div>
+                    @Html.TextBoxFor(m => m.Surname, new { @class = "form-control" })
+                </div>
+            </div>
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.RoleId, "Role")
+                    <div>
+                        @Html.DropDownList("RoleId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.RoleId, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+            @{
+                for (int i = 0; i < Model.Roles.Count; i++)
+                {
+                    <div class="form-group">
+                        <label>@Model.Roles[i].Name</label>
+                        <div>
+                            @Html.EditorFor(m => m.Roles[i].Checked, new { @class = "form-check-input" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m => m.Roles[i].Name)
+                    @Html.HiddenFor(m => m.Roles[i].Checked)
+                }
+            }
+            @Html.HiddenFor(x => x.id)
+            <div class="row m-2">
+                <div class="col-md-6">
+                    @Html.ActionLink("Back", "GetAllUsers", "Account", null, htmlAttributes: new { @class = "btn btn-info btn-block" })
+                </div>
+                <div class="col-md-6">
+                    <input type="submit" class="btn btn-primary float-md-right btn-block" value="Update" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,126 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+    <script src="~/Scripts/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script src="~/Scripts/jspdf.plugin.autotable.min.js"></script>
+<script src="~/Scripts/saveAsExcel.js"></script>
+<div id="app2" class="card mt-3 p-2">
+
+    <h4 class="text-center">Product report</h4> <form class="form-inline float-right mb-2">
+        <input class="form-control mr-sm-2" name="search" v-model="search" type="text" placeholder="search value" aria-label="Search">
+    </form>
+    <hr />
+    <p class="">
+        <button class="btn btn-success float-left col-3 btn-sm" :disabled="btnReport.disabled" v-on:click="getProducts()" type="button">{{btnReport.content}}</button>
+        <button class="btn btn-sm btn-success float-right" v-on:click="getExcel()" type="button">csv</button>
+        <button class="btn btn-sm btn-danger mr-1 float-right" v-on:click="getPdf()" type="button">pdf</button>
+    </p>
+    <table id="products" class="table">
+        <thead>
+            <tr>
+                <th>
+                    Date of Entry
+                </th>
+                <th>
+                    Place of entry
+                </th>
+                <th>
+                    Brand Name
+                </th>
+                <th>
+                    Pack size
+                </th>
+                <th>
+                    Manufacturer
+                </th>
+                <th>
+                    Distributor
+                </th>
+                <th>
+                    Indications
+                </th>
+                <th>
+                    Expiry
+                </th>
+                <th>
+                    Classification
+                </th>
+                <th>
+                    Ingredients
+                </th>
+                <th>
+                    Restricted Ingredient
+                </th>
+
+            </tr>
+        </thead>
+        <tbody v-for="product in products">
+            <tr v-for="(product,index) in products" :key="index">
+                <td>{{product.dateOfEntry }}</td>
+                <td>{{product.place }}</td>
+                <td>{{product.brand }}</td>
+                <td>{{product.packSize }}</td>
+                <td>{{product.manufacturer }}</td>
+                <td>{{product.distributor }}</td>
+                <td>{{product.indication }}</td>
+                <td>{{product.expiry }}</td>
+                <td>{{product.classification }}</td>
+                <td>{{product.ingerdients }}</td>
+                <td>{{product.RestrictedIngerdients }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    new Vue(
+        {
+            el: '#app2',
+            data: () => ({
+                search:'',
+                products: [],
+                test: 'data',
+                btnReport: {
+                    content: 'Load report',
+                    disabled: false
+                }
+            }),
+            methods: {
+                getPdf() {
+                    var doc = new jsPDF('l')
+                    doc.autoTable({ html: '#products' })
+                    doc.save('Products.pdf')
+                },
+                getExcel() {
+                    saveAsExcel('products', 'table.xls')
+                },
+                getProducts() {
+                    this.btnReport.content = 'Loading report...'
+                    this.btnReport.disabled = true
+                    axios.get('/Report/getProducts?search=' + this.search).then((response) => {
+                        this.products = response.data
+                        this.btnReport.content = 'Load report'
+                        this.btnReport.disabled = false
+                    })
+                },
+                // getUnit(unit) {
+                //    if (unit == 0) {
+                //        return 'Grams'
+                //    } else if (unit == 1) {
+                //        return 'Milligrams'
+                //    }
+                //    else if (unit == 2) {
+                //        return 'Litre'
+                //    }
+                //    else {
+                //        return 'Milliliters'
+                //    }
+
+                //},
+            }
+        }
+    );
+</script>
+

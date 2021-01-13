@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="shafedistributors" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\ThinkPad\ L470\\source\\repos\\Pharmacy\\Pharmacy\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\Users\\ThinkPad\ L470\\source\\repos\\Pharmacy\\Pharmacy\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="DefaultConnection-Web.config Connection String" description="" value="User ID=GT_Admin;Password=P@ssw0rd;Pooling=false;Data Source=gt01dbserver.database.windows.net;Initial Catalog=Medical; MultipleActiveResultSets=true;" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\ThinkPad\ L470\\source\\repos\\Pharmacy\\Pharmacy\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+</parameters>

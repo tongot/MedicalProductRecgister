@@ -1,0 +1,292 @@
+﻿@model Pharmacy.Models.Product
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div id="app" :class="`card mt-5 p-2 ${getState('@Model.HasRestrictedIngredient')}`">
+    <div class="modal fade" id="modalIngredient" tabindex="-1" role="dialog" aria-labelledby="modalIngredient" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalIngredient">{{modalHeader}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form data-validate="parsley">
+                        <div v-for="alert in alerts" class="alert alert-warning" role="alert">
+                            {{alert}}
+                        </div>
+                        <label for="commonName">Common name</label>
+                        <input type="text" id="commonName" v-model="commonName" class="form-control" />
+                        <label for="INCIName">INCI Name</label>
+                        <input type="text" required id="INCIName" v-model="INCIName" class="form-control" />
+                        <label for="Quantity">Quantity</label>
+                        <input type="number" step="3" id="Quantity" v-model="Quantity" required class="form-control" />
+                        <div class="form-group">
+                            <label for="Units">Units</label>
+                            <select required class="form-control" v-model="Unit">
+                                <option></option>
+                                <option>
+                                    Grams
+                                </option>
+                                <option>
+                                    Milligrams
+                                </option>
+                                <option>
+                                    Litre
+                                </option>
+                                <option>
+                                    Milliliters
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Restricted">Restricted</label>
+                            <select required v-model="Restricted" class="form-control" id="Restricted">
+                                <option></option>
+                                <option>
+                                    YES
+                                </option>
+                                <option>
+                                    NO
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" v-if="!isEdit" class="btn btn-primary" :disabled="btnEnable" v-on:click="postIngredient(@Model.ProductId)">{{btnText}}</button>
+                    <button type="button" v-if="isEdit" class="btn btn-success" :disabled="btnEdit.disabled" v-on:click="editIngredient(@Model.ProductId)">{{btnEdit.content}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <p class="float-right m-2">
+            @Html.ActionLink("Edit", "Edit", new { id = Model.ProductId }, new { @class = "btn btn-sm btn-info" })
+            @Html.ActionLink("Close", "Index", null, new { @class = "btn btn-sm btn-light" })
+        </p>
+        <h4 class="text-center">Product : @Model.Name</h4>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ProductCode)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ProductCode)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Distributor.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Distributor.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Manufacturer.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Manufacturer.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ProductCategory.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ProductCategory.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ProductClassification.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ProductClassification.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Region.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Region.Name)
+                    </dd>
+                    @*<dt>
+            @Html.DisplayNameFor(model => model.HasRestrictedIngredient)
+        </dt>
+        <dd>
+            @if (Model.HasRestrictedIngredient == Pharmacy.Models.RestrictedIngr.YES)
+            {
+                <div class="badge badge-danger">
+                    @Model.HasRestrictedIngredient
+                </div>
+            }
+            else
+            {
+                <div class="badge badge-primary">
+                    @Model.HasRestrictedIngredient
+                </div>
+            }
+
+        </dd>*@
+                    <dt>
+                        @Html.DisplayNameFor(model => model.StorageCondition)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.StorageCondition)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.OtherIngredients)
+                    </dt>
+
+                    <dd>
+                        <div class="card alert-info">
+                            <ul class="list-group">
+                                @foreach (var item in Model.OtherIngredientList)
+                                {
+                                    <li class="list-group-item">@item</li>
+                                }
+
+                            </ul>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+
+
+                <dl>
+                    @*<dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>*@
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.BrandName)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.BrandName)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Indication)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Indication)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PackSize)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PackSize)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Expiry)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Expiry)
+                    </dd>
+
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.addedBy)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.addedBy)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.createdOn)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.createdOn)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.RestrictedIngridients)
+                    </dt>
+
+                    <dd>
+                        <div class="card alert-danger">
+                                <ul class="list-group">
+                                    @foreach (var item in Model.listIngredient)
+                                    {
+                                    <li class="list-group-item">@item</li>
+                                    }
+                                    
+                                </ul>
+                        </div> 
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <hr /><button class="btn btn-sm btn-info float-right" v-on:click="addModal()">Add Ingredient</button>
+        <h5 class="text-center">
+            <a class="btn btn-success btn-sm text-light" data-toggle="modal" v-on:click="getIngredients(@Model.ProductId)">{{btnEngr}}</a>
+        </h5>
+
+        <div class="card p-2">
+            <div class="card p-2" v-for="(ingredient,index) in ingredients">
+                <div class="row">
+                    <div class="col-md-2">
+                        <h6>Indredient name</h6>
+                        {{ingredient.CommonName}}
+                    </div>
+                    <div class="col-md-2">
+                        <h6>INCI name</h6>
+                        {{ingredient.INCIName}}
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Quantity</h6>
+                        {{ingredient.Quantity}}
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Unit</h6>
+                        {{getUnit(ingredient.Unit)}}
+                    </div>
+                    <div class="col-md-2">
+                        <h6>Restricted</h6>
+                        <span v-if="ingredient.Restricted">
+                            <span class="badge badge-danger">YES</span>
+                        </span>
+                        <span v-if="!ingredient.Restricted">
+                            <span class="badge badge-primary">NO</span>
+                        </span>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-sm btn-primary text-light" data-toggle="modal" :disabled="btnEdit.disabled" v-on:click="getEditItem(ingredient,index)">{{btnEdit.content}}</button>
+                        <button type="button" class="btn btn-sm btn-danger text-light float-right" data-toggle="modal" :disabled="btnDelete.disabled" v-on:click="deleteIngrediant(ingredient.IngredientsId,index)">{{btnDelete.content}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="~/Scripts/src/productVue.js">
+    </script>

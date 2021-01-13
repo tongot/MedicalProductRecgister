@@ -1,0 +1,157 @@
+﻿@model Pharmacy.Models.Product
+
+@{
+    ViewBag.Title = "Create";
+}
+    <script src="~/Scripts/jquery-3.5.1.min.js"></script>
+<div class="card p-2 mt-4">
+
+    <h3 class="text-center mt-4">Create new product</h3>
+    <hr />
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    @if (ViewData["error"] != null)
+    {
+        <div class="alert alert-warning">@ViewData["error"].ToString()</div>
+    }
+    <div class="row" id="app2">
+
+        <div class="col-md-6">
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { })
+                    <div>
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BrandName, htmlAttributes: new { })
+                <div>
+                    @Html.EditorFor(model => model.BrandName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.BrandName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Indication, htmlAttributes: new { })
+                <div>
+                    @Html.EditorFor(model => model.Indication, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Indication, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PackSize, htmlAttributes: new { })
+                <div>
+                    @Html.EditorFor(model => model.PackSize, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PackSize, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Expiry, htmlAttributes: new { })
+                <div>
+                    @Html.EditorFor(model => model.Expiry, new { htmlAttributes = new { @class = "form-control expiry", id = "expiry" } })
+                    @Html.ValidationMessageFor(model => model.Expiry, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.StorageCondition, htmlAttributes: new { })
+                <div>
+                    <div>
+                        @Html.TextAreaFor(model => model.StorageCondition,  new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.StorageCondition, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.StorageCondition, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.OtherIngredients, htmlAttributes: new { })<strong class="text-danger">(Separate your ingredients with a comma(,))</strong>
+                <div>
+                    @Html.TextAreaFor(model => model.OtherIngredients, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.OtherIngredients, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.RestrictedIngridients, htmlAttributes: new { })<strong class="text-danger">(Separate your ingredients with a comma(,))</strong>
+                <div>
+                    @Html.TextAreaFor(model => model.RestrictedIngridients, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.RestrictedIngridients, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label>Category</label>
+                <div>
+                    @Html.DropDownList("ProductCategoryId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ProductCategoryId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Place of Entry</label>
+                <div>
+                    @Html.DropDownList("RegionId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.RegionId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Classification</label>
+                <div>
+                    @Html.DropDownList("ProductClassificationId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ProductClassificationId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Manufacturer</label>
+                <div>
+                    @Html.DropDownList("manufactureName", null, htmlAttributes: new { @class = "form-control", id = "manu" })
+                    @Html.ValidationMessageFor(model => model.ManufacturerId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Distributor</label>
+                <div>
+                    @Html.DropDownList("distributorName", null, htmlAttributes: new { @class = "form-control", id = "distr" })
+                    @Html.ValidationMessageFor(model => model.DistributorId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            <input type="submit" value="Save" class="btn btn-success float-right mt-3" />
+        </div>
+    </div>
+</div>
+
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    $(document).ready(() => {
+        $('#distr').editableSelect();
+        $('#manu').editableSelect();
+    })
+</script>

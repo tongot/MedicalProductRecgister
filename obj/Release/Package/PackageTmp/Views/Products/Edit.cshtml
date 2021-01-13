@@ -1,0 +1,268 @@
+﻿@model Pharmacy.Models.Product
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+    <div id="app">
+        <div class="modal fade" id="modalIngredient" tabindex="-1" role="dialog" aria-labelledby="modalIngredient" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalIngredient">{{modalHeader}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form data-validate="parsley">
+                            <div v-for="alert in alerts" class="alert alert-warning" role="alert">
+                                {{alert}}
+                            </div>
+                            <label for="commonName">Common name</label>
+                            <input type="text" id="commonName" v-model="commonName" class="form-control" />
+                            <label for="INCIName">INCI Name</label>
+                            <input type="text" required id="INCIName" v-model="INCIName" class="form-control" />
+                            <label for="Quantity">Quantity</label>
+                            <input type="number" step="3" id="Quantity" v-model="Quantity" required class="form-control" />
+                            <div class="form-group">
+                                <label for="Units">Units</label>
+                                <select required class="form-control" v-model="Unit">
+                                    <option></option>
+                                    <option>
+                                        Grams
+                                    </option>
+                                    <option>
+                                        Milligrams
+                                    </option>
+                                    <option>
+                                        Litre
+                                    </option>
+                                    <option>
+                                        Milliliters
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Restricted">Restricted</label>
+                                <select required v-model="Restricted" class="form-control" id="Restricted">
+                                    <option></option>
+                                    <option>
+                                        YES
+                                    </option>
+                                    <option>
+                                        NO
+                                    </option>
+                                </select>
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" v-if="!isEdit" class="btn btn-primary" :disabled="btnEnable" v-on:click="postIngredient(@Model.ProductId)">{{btnText}}</button>
+                        <button type="button" v-if="isEdit" class="btn btn-success" :disabled="btnEdit.disabled" v-on:click="editIngredient(@Model.ProductId)">{{btnEdit.content}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-2 p-2">
+            <h3 class="text-center mt-4">Edit Product</h3>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.ProductId)
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ProductCode, htmlAttributes: new { })
+                                <div>
+                                    @Html.EditorFor(model => model.ProductCode, new { htmlAttributes = new { @class = "form-control", disabled = "true" } })
+                                    @Html.ValidationMessageFor(model => model.ProductCode, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(m => m.ProductCode)
+                                    @Html.HiddenFor(m => m.createdOn)
+                                    @Html.HiddenFor(m => m.addedBy)
+
+                                </div>
+                            </div>
+
+                            @*<div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { })
+            <div>
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BrandName, htmlAttributes: new { })
+                                <div>
+                                    @Html.EditorFor(model => model.BrandName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.BrandName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Indication, htmlAttributes: new { })
+                                <div>
+                                    @Html.EditorFor(model => model.Indication, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Indication, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PackSize, htmlAttributes: new { })
+                                <div>
+                                    @Html.EditorFor(model => model.PackSize, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PackSize, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Expiry, htmlAttributes: new { })
+                                <div>
+                                    @Html.EditorFor(model => model.Expiry, new { htmlAttributes = new { @class = "form-control", id = "expiry" } })
+                                    @Html.ValidationMessageFor(model => model.Expiry, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.StorageCondition, htmlAttributes: new { })
+                                <div>
+                                    @Html.EditorFor(model => model.StorageCondition, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.StorageCondition, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.OtherIngredients, htmlAttributes: new { })
+                                <div>
+                                    @Html.TextAreaFor(model => model.OtherIngredients, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.OtherIngredients, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.RestrictedIngridients, htmlAttributes: new { })
+                                <div>
+                                    @Html.TextAreaFor(model => model.RestrictedIngridients, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.RestrictedIngridients, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ProductCategoryId, "ProductCategoryId", htmlAttributes: new { })
+                                <div>
+                                    @Html.DropDownList("ProductCategoryId", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProductCategoryId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.RegionId, "RegionId", htmlAttributes: new { })
+                                <div>
+                                    @Html.DropDownList("RegionId", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.RegionId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ProductClassificationId, "ProductClassificationId", htmlAttributes: new { })
+                                <div>
+                                    @Html.DropDownList("ProductClassificationId", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProductClassificationId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ManufacturerId, "ManufacturerId", htmlAttributes: new { })
+                                <div>
+                                    @Html.DropDownList("ManufacturerId", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ManufacturerId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DistributorId, "DistributorId", htmlAttributes: new { })
+                                <div>
+                                    @Html.DropDownList("DistributorId", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.DistributorId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card p-2 alert-info">
+                        <hr />
+                        <div>
+                            <button class="btn btn-sm btn-info float-right" v-on:click.prevent="addModal()">Add Ingredient</button>
+                            <h5 class="text-center">
+                                <a class="btn btn-sm  btn-success text-light" v-on:click="getIngredients(@Model.ProductId)">{{btnEngr}}</a>
+
+                            </h5>
+                        </div>
+                      
+   
+                       
+                        <div class="card p-2" v-for="(ingredient,index) in ingredients">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6>Indredient name</h6>
+                                    {{ingredient.CommonName}}
+                                </div>
+                                <div class="col-md-2">
+                                    <h6>INCI name</h6>
+                                    {{ingredient.INCIName}}
+                                </div>
+                                <div class="col-md-2">
+                                    <h6>Quantity</h6>
+                                    {{ingredient.Quantity}}
+                                </div>
+                                <div class="col-md-2">
+                                    <h6>Unit</h6>
+                                    {{getUnit(ingredient.Unit)}}
+                                </div>
+                                <div class="col-md-2">
+                                    <h6>Restricted</h6>
+                                    <span v-if="ingredient.Restricted">
+                                        <span class="badge badge-danger">YES</span>
+                                    </span>
+                                    <span v-if="!ingredient.Restricted">
+                                        <span class="badge badge-primary">NO</span>
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-sm btn-primary text-light" data-toggle="modal" :disabled="btnEdit.disabled" v-on:click="getEditItem(ingredient,index)">{{btnEdit.content}}</button>
+                                    <button type="button" class="btn btn-sm btn-danger text-light float-right" data-toggle="modal" :disabled="btnDelete.disabled" v-on:click="deleteIngrediant(ingredient.IngredientsId,index)">{{btnDelete.content}}</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        @section Scripts {
+                            @Scripts.Render("~/bundles/jqueryval")
+                        }
+
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <input type="submit" value="Save" class="btn btn-success float-right mt-3" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                </div>
+            }
+
+        </div>
+        <script src="~/Scripts/src/productVue.js"></script>
+    </div>
